@@ -39,6 +39,11 @@ const byte dayTemplate[] = {
   0b01111100, // Weekdays
   0b11111110  // Everyday
 };
+
+struct TimerTime{ // bounded 00:00 to 23:59
+  uint8_t hour;
+  uint8_t minute;
+};
   
 class DailyTimer{
   public:
@@ -55,15 +60,13 @@ class DailyTimer{
     int getInstanceCount(void) const;
     bool begin(); 
     uint8_t getDays() const;
+    TimerTime getStartTime();
+    TimerTime getEndTime();
     static void update();
     static time_t tmConvert_t(int YYYY, byte MM, byte DD, byte hh, byte mm, byte ss);
     bool isActive();
     
   protected:
-    struct TimerTime{ // bounded 00:00 to 23:59
-      uint8_t hour;
-      uint8_t minute;
-    };
     bool sync();
     void(*startTimeCallback)(); //
     void(*endTimeCallback)();   //

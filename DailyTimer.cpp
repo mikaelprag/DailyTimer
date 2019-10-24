@@ -132,6 +132,12 @@ void DailyTimer::setEndTime(uint8_t hour, uint8_t minute)
   (void)sync();
 }
 
+TimerTime DailyTimer::getStartTime() {
+  return startTime;
+}
+TimerTime DailyTimer::getEndTime() {
+  return endTime;
+}
 
 uint8_t DailyTimer::setRandomDays(uint8_t number_Days)
 {
