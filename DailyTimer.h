@@ -62,6 +62,9 @@ class DailyTimer{
     uint8_t getDays() const;
     TimerTime getStartTime();
     TimerTime getEndTime();
+    TimerTime getRandomStartTime();
+    TimerTime getRandomEndTime();
+    void randomizeTimes();
     static void update();
     static time_t tmConvert_t(int YYYY, byte MM, byte DD, byte hh, byte mm, byte ss);
     bool isActive();

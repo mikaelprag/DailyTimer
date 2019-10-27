@@ -139,6 +139,14 @@ TimerTime DailyTimer::getEndTime() {
   return endTime;
 }
 
+TimerTime DailyTimer::getRandomStartTime() {
+  return randomStartTime;
+}
+
+TimerTime DailyTimer::getRandomEndTime() {
+  return randomEndTime;
+}
+
 uint8_t DailyTimer::setRandomDays(uint8_t number_Days)
 {
   randomSeed(now() + micros());
@@ -204,25 +212,32 @@ bool DailyTimer::isActive()
   isActive(this);
 }
 
+void DailyTimer::randomizeTimes() {
+
+  randomSeed(now() + micros());
+
+  if (randomType == RANDOM  || randomType == RANDOM_START)
+  {
+    int hrs = startTime.hour * 60 + startTime.minute;
+    hrs += constrain(random(-1 * offset, offset), 1, (24 * 60) - 1);
+    randomStartTime.minute = hrs % 60;
+    randomStartTime.hour = hrs / 60;
+  }
+
+  if (randomType == RANDOM || randomType == RANDOM_END)
+  {
+    int hrs = endTime.hour * 60 + endTime.minute;
+    hrs += constrain(random(-1 * offset, offset), 1, (24 * 60) - 1);
+    randomEndTime.minute = hrs % 60;
+    randomEndTime.hour = hrs / 60;
+  }
+}
+
 bool DailyTimer::isActive(DailyTimer* instance)
 {
   if (instance->currentDay != weekday() && instance->randomType) // once a day, generate new random offsets
   {
-    randomSeed(now() + micros());
-    if (instance->randomType == RANDOM  || instance->randomType == RANDOM_START)
-    {
-      int hrs = instance->startTime.hour * 60 + instance->startTime.minute;
-      hrs += constrain(random(-1 * instance->offset, instance->offset), 1, (24 * 60) - 1);
-      instance->randomStartTime.minute = hrs % 60;
-      instance->randomStartTime.hour = hrs / 60;
-    }
-    if (instance->randomType == RANDOM || instance->randomType == RANDOM_END)
-    {
-      int hrs = instance->endTime.hour * 60 + instance->endTime.minute;
-      hrs += constrain(random(-1 * instance->offset, instance->offset), 1, (24 * 60) - 1);
-      instance->randomEndTime.minute = hrs % 60;
-      instance->randomEndTime.hour = hrs / 60;
-    }
+    instance->randomizeTimes();
     instance->currentDay = weekday();
   }
   time_t now_time = now();
